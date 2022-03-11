@@ -1,0 +1,35 @@
+= ITRM API Document
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 3
+:sectlinks:
+
+[[introduction]]
+== 소개
+
+RestDoc Test
+
+[[common]]
+== 공통 사항
+
+API PORT는 8080
+
+
+[[save-todo-mng-act]]
+== SAVE
+
+=== Request
+
+CURL:
+include::{snippets}/itrm/save-todo-mng-act/curl-request.adoc[]
+
+Request Parameters:
+include::{snippets}/itrm/save-todo-mng-act/request-body.adoc[]
+Request HTTP Example:
+include::{snippets}/itrm/save-todo-mng-act/http-request.adoc[]
+
+=== Response
+Response:
+include::{snippets}/itrm/save-todo-mng-act/http-response.adoc[]

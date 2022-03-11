@@ -1,0 +1,4 @@
+[source,bash]
+----
+$ curl 'http://apihost:8090/blog?name=%EC%B9%A9&id=chip' -i -X GET
+----
