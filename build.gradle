@@ -1,0 +1,72 @@
+plugins {
+	id 'org.springframework.boot' version '2.6.4'
+	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+
+	id 'org.asciidoctor.jvm.convert' version '3.3.2'
+	id 'java'
+}
+
+group = 'pickMovie'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '11'
+
+
+// RestDoc을 만들기위해 asciidoctor 관련된 설정을 추가한다.
+configurations {
+	asciidoctorExtensions
+}
+
+
+repositories {
+	mavenCentral()
+}
+
+
+//snippet 경로설정 src/docs/asciidoc/index.doc에서 snippets들의 경로를 잡아준다.
+ext {
+	set('snippetsDir', file("build/generated-snippets"))
+}
+
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
+
+	// JUnit4 <-테스트 도구를 위한 세팅
+	testImplementation('org.junit.vintage:junit-vintage-engine') {
+		exclude group: 'org.hancrest', module: 'hamcrest-core'
+	}
+
+	//asciidoctor 관련하여 추가해주어야한다.
+	asciidoctorExtensions 'org.springframework.restdocs:spring-restdocs-asciidoctor'
+
+	//Gson 추가    <- Google Gson을 사용할 경우 추가하여준다.
+	implementation 'com.google.code.gson:gson:2.8.7'
+}
+
+
+//Junit 관련 gradle이다 추가해주어야함
+test {
+	outputs.dir snippetsDir
+	useJUnitPlatform()
+}
+
+
+//asciidoctor 관련 gradle 파일이다. 이것도 추가하여주자.
+asciidoctor {
+	configurations 'asciidoctorExtensions'
+	inputs.dir snippetsDir
+	dependsOn test
+}
+
+
+//RestDoc 문서를 호스팅 하기 위하여, asciidoc에 생성된 문서를 src/main/resources/static/docs 로 사하여준다.
+bootJar {
+	dependsOn asciidoctor
+	copy {
+		from "build/docs/asciidoc"            // /html5를 사용하지 않는다!
+		into 'src/main/resources/static/docs'    // /static/docs로 복사!
+	}
+}
